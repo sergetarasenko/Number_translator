@@ -33,7 +33,7 @@
 
 1. Клонируйте репозиторий:
 ```bash
-git clone https://github.com/ваш-username/название-репозитория.git
+git clone https://github.com/sergetarasenko/Numnber_translater.git
 Перейдите в папку проекта:
 
 bash
