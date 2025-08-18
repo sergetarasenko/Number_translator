@@ -7,8 +7,35 @@ from num_to_word import number_to_words
 # pyinstaller --onefile --windowed converter.py
 
 
-def main():
-    def convert_number():
+def convert_number(num, ed_param_rub, ed_param_kop):
+    if num == 0:
+        if ed_param_rub and ed_param_kop:
+            result_rub = number_to_words(num, ed_param_rub)
+            result_kop = number_to_words(num, ed_param_kop)
+            result = result_rub + " " + result_kop
+        elif ed_param_kop:
+            result = number_to_words(num, ed_param_kop)
+        elif ed_param_rub:
+            result = number_to_words(num, ed_param_rub)
+        else:
+            result = number_to_words(num, "")
+    else:
+        num_rub, num_kop = divmod(num, 100)
+        if ed_param_rub and ed_param_kop:
+            result_rub = number_to_words(num_rub, ed_param_rub)
+            result_kop = number_to_words(num_kop, ed_param_kop)
+            result = result_rub + " " + result_kop
+        elif ed_param_kop:
+            result = number_to_words(num_rub, ed_param_kop)
+        elif ed_param_rub:
+            result = number_to_words(num_rub, ed_param_rub)
+        else:
+            result = number_to_words(num_rub, "")
+    return result
+
+
+def window_interface():
+    def convert_button():
         try:
             num = float(entry.get())
         except ValueError:
@@ -30,32 +57,7 @@ def main():
             ed_param_kop = "kop"
 
         num = int(num * 100)
-        print("num _", num)
-        if num == 0:
-            print()
-            if ed_param_rub and ed_param_kop:
-                result_rub = number_to_words(num, ed_param_rub)
-                result_kop = number_to_words(num, ed_param_kop)
-                result = result_rub + " " + result_kop
-            elif ed_param_kop:
-                result = number_to_words(num, ed_param_kop)
-            elif ed_param_rub:
-                result = number_to_words(num, ed_param_rub)
-            else:
-                result = number_to_words(num, "")
-        else:
-            num_rub, num_kop = divmod(num, 100)
-            if ed_param_rub and ed_param_kop:
-                result_rub = number_to_words(num_rub, ed_param_rub)
-                result_kop = number_to_words(num_kop, ed_param_kop)
-                result = result_rub + " " + result_kop
-            elif ed_param_kop:
-                result = number_to_words(num_rub, ed_param_kop)
-            elif ed_param_rub:
-                result = number_to_words(num_rub, ed_param_rub)
-            else:
-                result = number_to_words(num_rub, "")
-
+        result = convert_number(num, ed_param_rub, ed_param_kop)
         result_text.config(state='normal')
         result_text.delete(1.0, tk.END)
         result_text.insert(tk.END, result)
@@ -83,7 +85,7 @@ def main():
         .pack(side=tk.LEFT, padx=10))
 
     # Кнопка для выполнения преобразования
-    (ttk.Button(root, text="Преобразовать", command=convert_number)
+    (ttk.Button(root, text="Преобразовать", command=convert_button)
         .pack(pady=10))
 
     # Поле для вывода результата с возможностью копирования
@@ -122,4 +124,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    window_interface()
