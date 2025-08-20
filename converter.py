@@ -1,4 +1,6 @@
+import threading
 import tkinter as tk
+from flask import Flask, request, jsonify
 from tkinter import ttk
 
 from num_to_word import number_to_words
@@ -123,5 +125,33 @@ def window_interface():
     root.mainloop()
 
 
+def api_interface():
+    app = Flask(__name__)
+
+    @app.route('/convert', methods=['POST'])
+    def api_converter():
+        print("request_", request)
+        data = request.json
+        print("data_", data)
+        # logic
+        num = float(data.get("price", 0))
+        rub = data.get("rubles", False)
+        kop = data.get("kopeek", False)
+        # Определяем параметр для функции
+        ed_param_rub = ""
+        ed_param_kop = ""
+        if rub:
+            ed_param_rub = "rub"
+        if kop:
+            ed_param_kop = "kop"
+        num = int(num * 100)
+        converted = convert_number(num, ed_param_rub, ed_param_kop)
+        print("converted_", converted)
+        return jsonify(result=converted)
+
+    app.run(port=5000)
+
+
 if __name__ == "__main__":
+    threading.Thread(target=api_interface, daemon=True).start()
     window_interface()
