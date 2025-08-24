@@ -1,3 +1,4 @@
+import argparse
 import threading
 import tkinter as tk
 from flask import Flask, request, jsonify
@@ -153,5 +154,9 @@ def api_interface():
 
 
 if __name__ == "__main__":
-    threading.Thread(target=api_interface, daemon=True).start()
+    parser = argparse.ArgumentParser(description="Description To Be Here")
+    parser.add_argument("--api", action="store_true", help="Run API server")
+    args = parser.parse_args()
+    if args.api:
+        threading.Thread(target=api_interface, daemon=True).start()
     window_interface()
